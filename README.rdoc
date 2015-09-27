@@ -1,0 +1,8 @@
+Twitter Streaming API + ElasticSearch
+
+Resources:
+=========
+https://github.com/tweetstream/tweetstream
+https://www.elastic.co/guide/en/elasticsearch/client/ruby-api/current/_persistence.html
+https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geohash-cell-filter.html
+
