@@ -1,0 +1,24 @@
+
+curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{
+  "query": {
+    "filtered" : {
+        "query" : {
+            "match_all" : {}
+        },
+        "filter" : {
+            "geo_distance" : {
+                "distance" : "2000km",
+                "location" : {
+                    "lat" : -122,
+                    "lon" : 37
+                }
+            }
+        }
+    }
+   },
+    "sort": [
+           { "created_at":   { "order": "desc" }}
+       ]
+}'
+
+#124.482003,32.528832

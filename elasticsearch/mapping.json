@@ -1,0 +1,25 @@
+{
+  "mappings": {
+    "tweet": {
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "location": {
+            "type": "geo_shape",
+            "tree": "quadtree",
+       	   "precision": "1m"
+        }
+		"hashtags" : { "type" : "string" }
+      }
+    }
+  }
+  
+  "tweet" : {
+  	"dynamic": "true",
+      "properties" : {        
+    	  "text" : { "type" : "string" },        
+    	  "hashtags" : { "type" : "string" },        
+	  "coordinates" : { "type" : "geo_shape" ,"tree":"quadtree"}        
+      }
+  }

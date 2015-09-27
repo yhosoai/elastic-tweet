@@ -200,6 +200,10 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    searchkick (0.9.1)
+      activemodel
+      elasticsearch (>= 1)
+      hashie
     simple_oauth (0.3.1)
     spring (1.4.0)
     sprockets (3.3.5)
@@ -270,6 +274,7 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  searchkick
   spring
   sqlite3
   turbolinks

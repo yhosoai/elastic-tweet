@@ -1,0 +1,103 @@
+http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80
+curl -XDELETE 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/'
+curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/'
+
+curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_mapping' -d '
+{
+    "tweet" : {
+        "properties" : {
+            "locations" : {"type" : "geo_point"}
+        }
+    }
+}'
+
+curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/1' -d '
+{ 
+    "user": "kimchy", 
+    "postDate": "2009-11-15T13:12:00", 
+    "message": "Trying out Elastic Search, so far so good?",
+    "locations" : [{
+        "lat" : 50.00,
+        "lon" : 10.00
+    },
+    {
+        "lat" : 40.00,
+        "lon" : 9.00
+    }]
+}'
+
+curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/2' -d '
+{ 
+    "user": "kimchy", 
+    "postDate": "2009-11-15T13:12:00", 
+    "message": "Trying out Elastic Search, so far so good?",
+    "locations" : [{
+        "lat" : 30.00,
+        "lon" : 8.00
+    },
+    {
+        "lat" : 20.00,
+        "lon" : 7.00
+    }]
+}'
+
+
+
+
+curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com/twitter/_search' -d '{
+    "query": {
+        "filtered" : {
+            "query" : {
+                "match_all" : {}
+            },
+            "filter" : {
+                "geo_distance" : {
+                    "distance" : "20km",
+                    "tweet.locations" : {
+           		 		"lat" : 30.00,
+                        "lon" : 8.00
+                    }
+                }
+            }
+        }
+    }
+}'
+#access to actual json
+http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/648069352739090432
+648069352739090432
+
+curl -XGET 'http://localhost:9200/twitter/tweet/_search' -d '{
+    "filtered" : {
+        "query" : {
+            "match_all" : {}
+        },
+        "filter" : {
+            "geo_distance" : {
+                "distance" : "2000km",
+                "pin.location" : {
+                    "lat" : 40,
+                    "lon" : -70
+                }
+            }
+        }
+    }
+}'
+curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty=true' -d '
+{
+  "query": {
+    "filtered" : {
+        "query" : {
+            "match_all" : {}
+        },
+        "filter" : {
+            "geo_distance" : {
+                "distance" : "20km",
+                "location" : {
+                    "lon" : -122.091151,
+                    "lat" : 37
+                }
+            }
+        }
+    }
+  }
+}'
