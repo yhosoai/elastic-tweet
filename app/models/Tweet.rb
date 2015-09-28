@@ -59,7 +59,7 @@ class Tweet
   #debugging, as the response is different from straight curl
   def self.showTweetsInArea(area, hashtag=nil)
     sort = [{created_at: {order: "desc"}}]
-
+    size = 250
     query = {
       filtered: {
         query: {
@@ -77,11 +77,11 @@ class Tweet
       }
     }
     if(hashtag)
-      query[:filtered][:query] = {match: { hashtag: hashtag }}
+      query[:filtered][:query] = {match: { hashtags: hashtag }}
     end
     repository = Tweet.repository
     
-    tweets = repository.search(query: query, sort: sort)
+    tweets = repository.search(query: query, sort: sort,size:size)
     return tweets
   end
   

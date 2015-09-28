@@ -17,7 +17,7 @@
 <p>
 <label for="search-basic">Search Input:</label>
 <input type="search" name="search" id="search_hashtags" value="" />
-<input type="button" value="filter hashtag" onclick="filterHashtags()">. 
+<input type="button" value="filter hashtag" onclick="refreshPartial()">. 
 </p>
 <%= link_to 'Edit', edit_area_path(@area) %> |
 <%= link_to 'Back', areas_path %>
@@ -38,19 +38,16 @@ $(document).ready(function () {
     setInterval(refreshPartial, 10000)
 });
 
-// calls action refreshing the partial
 function refreshPartial() {
-  $.ajax({
-    url: "/area/refresh_tweets/<%=@area.id%>.js"
- })
-}
-
-function filterHashtags() {
 	hashtag = $("#search_hashtags").val();
 	if(hashtag){	 
 	  $.ajax({
    	   url: "/area/refresh_tweets/<%=@area.id%>.js?hashtag="+hashtag
 	  })
+  	}else{
+  	  $.ajax({
+     	   url: "/area/refresh_tweets/<%=@area.id%>.js"
+  	  })
   	}
 }
 </script>
