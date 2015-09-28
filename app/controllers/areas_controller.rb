@@ -16,6 +16,11 @@ class AreasController < ApplicationController
     # repository = Elasticsearch::Persistence::Repository.new
     # repository.search(query: { match: { text: 'test' } }).first
 
+    @hash = Gmaps4rails.build_markers(@area) do |area, marker|
+      marker.lat area.latitude
+      marker.lng area.longitude
+    end
+    
     @tweets = Tweet.showTweetsInArea(@area)
     
   end
