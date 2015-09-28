@@ -128,38 +128,5 @@ class Tweet
   end
   
   
-  ##TO BE DELETED
-  def self.debugShowTweetsInArea(area)
-
-    repository = Tweet.repository
-       #
-    #using rawso that we can switch back and forth with other way of calling API
-      querystr = '{
-              "query": {
-                "filtered" : {
-                    "query" : {
-                        "match_all" : {}
-                    },
-                    "filter" : {
-                        "geo_distance" : {
-                            "distance" : "'+"#{area.radius}"+'km",
-                            "location" : {
-                                "lat" : '+"#{area.latitude}"+',
-                                "lon" : '+"#{area.longitude}"+'
-                            }
-                        }
-                    }
-                }
-               },
-                "sort": [
-                       { "created_at":   { "order": "desc" }}
-                   ]
-          }'
-      queryJson = JSON.parse(querystr)
-      puts "this is the query we are sending #{querystr}"
-      tweets = repository.search(queryJson)
-      return tweets
-     
-  end
   
 end
