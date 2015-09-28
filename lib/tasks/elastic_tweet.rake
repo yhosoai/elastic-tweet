@@ -12,9 +12,10 @@ namespace :elastic_tweet do
   ny =-74.46,40.32,-70.15,43.38
  # https://www.elastic.co/guide/en/elasticsearch/guide/current/lat-lon-formats.html
  def stream(bounding_box)
+   Rails.application.eager_load!
+   
    repository = Tweet.repository
  
-   
    starttime = DateTime.now
    #san francisco,CA
    # locations =  -123.044,36.846,-121.591,38.352  
