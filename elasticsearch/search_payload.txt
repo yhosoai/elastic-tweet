@@ -1,3 +1,4 @@
+#1. search with area info
 
 curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{
   "query": {
@@ -21,4 +22,5 @@ curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
        ]
 }'
 
-#124.482003,32.528832
+
+#1. search with area info & hashtags.

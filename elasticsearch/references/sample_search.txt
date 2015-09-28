@@ -1,8 +1,11 @@
-http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80
-curl -XDELETE 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/'
-curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/'
+#remote: paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80
+#local : http://localhost:9200
 
-curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_mapping' -d '
+ http://localhost:9200
+curl -XDELETE 'http://localhost:9200/twitter/'
+curl -XPUT 'http://localhost:9200/twitter/'
+
+curl -XPUT 'http://localhost:9200/twitter/tweet/_mapping' -d '
 {
     "tweet" : {
         "properties" : {
@@ -11,7 +14,7 @@ curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
     }
 }'
 
-curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/1' -d '
+curl -XPUT 'http://localhost:9200/twitter/tweet/1' -d '
 { 
     "user": "kimchy", 
     "postDate": "2009-11-15T13:12:00", 
@@ -26,7 +29,7 @@ curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
     }]
 }'
 
-curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/2' -d '
+curl -XPUT 'http://localhost:9200/twitter/tweet/2' -d '
 { 
     "user": "kimchy", 
     "postDate": "2009-11-15T13:12:00", 
@@ -52,18 +55,16 @@ curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
             },
             "filter" : {
                 "geo_distance" : {
-                    "distance" : "20km",
-                    "tweet.locations" : {
-           		 		"lat" : 30.00,
-                        "lon" : 8.00
-                    }
+                    "distance" : "2000km",
+                    "tweet.locations" : {   "lat" : 30,"lon" : 7
+                   }
                 }
             }
         }
     }
 }'
 #access to actual json
-http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/648069352739090432
+http://localhost:9200/twitter/tweet/648069352739090432
 648069352739090432
 
 curl -XGET 'http://localhost:9200/twitter/tweet/_search' -d '{
@@ -82,7 +83,7 @@ curl -XGET 'http://localhost:9200/twitter/tweet/_search' -d '{
         }
     }
 }'
-curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty=true' -d '
+curl -XGET 'http://localhost:9200/twitter/tweet/_search?pretty=true' -d '
 {
   "query": {
     "filtered" : {

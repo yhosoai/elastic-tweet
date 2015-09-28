@@ -14,7 +14,8 @@ class AreasController < ApplicationController
   def show
     # repository = Elasticsearch::Persistence::Repository.new
     # repository.search(query: { match: { text: 'test' } }).first
-    
+
+    @tweets = Tweet.showTweetsInArea(@area)
   end
 
   # GET /areas/new

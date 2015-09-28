@@ -6,71 +6,28 @@ namespace :elastic_tweet do
   
  # https://www.elastic.co/guide/en/elasticsearch/guide/current/lat-lon-formats.html
  
- task :streamToElasticSearch => :environment do
+ task :streamTweetsToSearch => :environment do
    # TweetStream::Client.new.track('weather')  do |status|
    #TODO
    #we'll get it from collection of what user typed before later.
    #FOR NOW, using hard-coded value to make sure data pipelines are setup correctly.
    #cast to Tweet object that has only fields that we care about
-   repository = Elasticsearch::Persistence::Repository.new do
-     client Elasticsearch::Client.new url: ENV['ELASTICSEARCH_URL'], log: true
 
-     # Set a custom index name
-     index :twitter
-
-     # Set a custom document type
-     type  :tweet
-
-     # Specify the class to initialize when deserializing documents
-     klass Tweet
-
-     # Configure the settings and mappings for the Elasticsearch index
-     settings number_of_shards: 1 do
-       mapping do
-         indexes :text,  analyzer: 'snowball'
-         indexes :location, type: 'geo_point', as: 'coordinates'
-         indexes :geoshape_location, type: 'geo_shape', as: 'coordinates'
-         indexes :hashtags, analyzer: 'english'
-       end
-     end
-
-     # Customize the serialization logic
-     def serialize(document)
-      super
-     end
-
-     def deserialize(document)
-         puts "# ***** CUSTOM DESERIALIZE LOGIC KICKING IN... *****"
-         super
-       end
-   end
    
+   repository = Tweet.createRepository
    
-   # locations = -123.044,36.846,-121.591,38.352
-
+   locations = -123.044,36.846,-121.591,38.352,-74,40,-73,41
    #san francisco,CA
-   locations =  -123.044,36.846,-121.591,38.352
-   @t
-   TweetStream::Client.new.locations(locations) do |tweet|
-     puts "new tweet :#{tweet.text}"
-     @t = tweet
-     twr = Tweet.new
-     twr.mapFromStream(@t)
-     repository.save(twr)
+   # locations =  -123.044,36.846,-121.591,38.352
+  
+   TweetStream::Client.new.locations(locations) do |tweet|    
+      puts "#new tweets #{tweet.text}"
+      tweetwrap = Tweet.new
+      tweetwrap.mapFromStream(tweet)
+      repository.save(tweetwrap)
    end
-   
-
  end 
-# -114.131212,42.009519
-locations =  -123.044,36.846,-121.591,38.352
-@t
-TweetStream::Client.new.locations() do |tweet|
-  puts "new tweet :#{tweet.text}"
-  @t = tweet
-  twr = Tweet.new
-  twr.mapFromStream(@t)
-  repository.save(twr)
-end
+
 end
 
 #
