@@ -12,7 +12,8 @@ curl -XPUT 'http://localhost:9200/twitter/tweet/_mapping' -d '
         "properties" : {        
       	  "text" : { "type" : "string" },        
       	  "hashtags" : { "type" : "string" },        
-        "location": {
+      	  "created_at" : { "type" : "string" },        
+          "location": {
                 "type" : "geo_point",
 	            "geohash_prefix": true,
 	            "geohash_precision": 6				
@@ -21,7 +22,11 @@ curl -XPUT 'http://localhost:9200/twitter/tweet/_mapping' -d '
         }
     }
 }'
-  
+
+#TODO
+#try to add this
+  #        "dynamic_date_formats" : ["yyyy-MM-ddThh:mm:ss.ZZZ"", "dd-MM-yyyy"],
+
 #set refresh interval
 curl -XPUT http://localhost:9200/twitter/_settings -d '{
     "index" : {

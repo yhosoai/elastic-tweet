@@ -7,6 +7,10 @@ class Area < ActiveRecord::Base
   # after_create: rake_job
   validates :latitude, uniqueness: { scope: [:latitude, :longitude,:radius] }
 
+  # reverse_geocoded_by :latitude, :longitude,
+  #   :address => :location
+  #   after_validation :reverse_geocode
+
   # find existing value  
   def self.find_lat_lon(area)
     puts area.inspect

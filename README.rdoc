@@ -1,4 +1,10 @@
-Twitter Streaming API + ElasticSearch
+Twitter Streaming API + ElasticSearch + GeoJSON Specification on these API + GOOGLE MAP 
+
+https://elastic-tweet.herokuapp.com/
+
+
+
+
 
 Resources:
 =========

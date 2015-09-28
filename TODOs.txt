@@ -15,6 +15,7 @@
 		#test case 3. search with hashtag
 		
 	#5c. Use of geohash_cell and cache filter to ensure fast query
+	https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/query-dsl-filters-caching.html
 	
 	#5d. Additionally, tweets can be filtered within the above area with a specific hangtag (i.e.: #amazing, #super, #obama, etc)
 	

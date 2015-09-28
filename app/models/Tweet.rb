@@ -73,9 +73,12 @@ class Tweet
               lon: area.longitude
             }
           }
-        }
+          # _cache_key: "area_tweets  "
+        },
+          _cache: "true"
       }
     }
+    
     if(hashtag)
       query[:filtered][:query] = {match: { hashtags: hashtag }}
     end

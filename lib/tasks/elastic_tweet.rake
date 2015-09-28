@@ -3,31 +3,23 @@ namespace :elastic_tweet do
   require 'time'
   require 'json'
   require 'elasticsearch/persistence'
-  
+   #http://boundingbox.klokantech.com/
+  norcal = -122.9953,36.7602,-121.26,38.1593
+  california = -124.39,32.95,-113.87,40.98
+  america_continent= -172.3,-57.0,-15.9,69.9
+  asia = 69.2,3.6,157.4,55.4
+  world = -177.9,-55.1,-179.7,81.0
+  ny =-74.46,40.32,-70.15,43.38
  # https://www.elastic.co/guide/en/elasticsearch/guide/current/lat-lon-formats.html
- 
- task :streamTweetsToSearch => :environment do
-   # TweetStream::Client.new.track('weather')  do |status|
-   #TODO
-   #we'll get it from collection of what user typed before later.
-   #FOR NOW, using hard-coded value to make sure data pipelines are setup correctly.
-   #cast to Tweet object that has only fields that we care about
-
-   
+ def stream(bounding_box)
    repository = Tweet.repository
+ 
    
-   #get all area locations
-   # locations =Area.all.map{|a| [a.longitude.round,a.latitude.round]}.uniq.flatten
-   # locations = locations.concat mainCities
-   # newyork=40.71427, longitude=-74.00597 NEW YORK CITY
-   #start tracking main cities for now
-   locations= -123.044,36.846,-121.591,38.352,-74,40,-73,41#,-74.00597,40.71427,-87.6847,41.8369
-   # locations = -122, 37, -74, 41, -124, 32, -80, 40, -73, 40
    starttime = DateTime.now
    #san francisco,CA
    # locations =  -123.044,36.846,-121.591,38.352  
    cycle = 0
-   TweetStream::Client.new.locations(locations) do |tweet|    
+   TweetStream::Client.new.locations(bounding_box) do |tweet|    
     puts "#new tweets #{tweet.text}"
     tweetwrap = Tweet.new
     tweetwrap.mapFromStream(tweet)
@@ -43,8 +35,17 @@ namespace :elastic_tweet do
       break
     end
    end
+ end
+ 
+ task :streamNorCalTweets => :environment do
+   stream(norcal)
  end 
-
+ task :streamNYweets => :environment do
+   stream(ny)
+ end 
+ task :streamAsiaTweets => :environment do
+   stream(asia)
+ end 
 end
 
 #

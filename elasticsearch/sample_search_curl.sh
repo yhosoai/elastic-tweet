@@ -1,26 +1,22 @@
 #1. search with area info
 
-curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{
-              "query": {
-                "filtered" : {
-                    "query" : {
-                        "match_all":{}
-                   },
-                    "filter" : {
-                        "geohash_cell" : {
-                            "location" : {
-                                "lat" : 40,
-                                "lon" : -73
-                            },
-			                "precision": "20mi"							
-                        }
-                    }
-                }
-               },
-                "sort": [
-                       { "created_at":   { "order": "desc" }}
-                   ]
-          }'
+curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{"query": {
+"filtered" : {
+    "query" : {
+        "match_all":{}
+   },
+    "filter" : {
+        "geohash_cell" : {
+            "location" : {
+                "lat" : 40,
+                "lon" : -73
+            },
+            "precision": "20mi"							
+        }
+    }
+}
+}
+}'
 	
 		  
 curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{"query":{"filtered":{"query":{"match_all":{}},"filter":{"geo_distance":{"distance":"200km","location":{"lat":40.0,"lon":73.0}}}}},"sort":[{"created_at":{"order":"desc"}}]}'
@@ -32,24 +28,24 @@ curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
 
 
 		  #works well
-		  '{
-		                "query": {
-		                  "filtered" : {
-		                      "query" : {
-		                          "match_all":{}
-		                     },
-		                      "filter" : {
-		                          "geo_distance" : {
-		                              "distance" : "200km",
-		                              "location" : {
-		                                  "lat" : 40,
-		                                  "lon" : -73
-		                              }
-		                          }
-		                      }
-		                  }
-		                 },
-		                  "sort": [
-		                         { "created_at":   { "order": "desc" }}
-		                     ]
-		            }'
+  curl -XGET 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_search?pretty' -d '{
+        "query": {
+                  "filtered" : {
+                      "query" : {
+                          "match_all":{}
+                     },
+                      "filter" : {
+                          "geo_distance" : {
+                              "distance" : "200km",
+                              "location" : {
+                                  "lat" : 40,
+                                  "lon" : -73
+                              }
+                          }
+                      }
+                  }
+                 },
+                  "sort": [
+                         { "created_at":   { "order": "desc" }}
+                     ]
+            }'
