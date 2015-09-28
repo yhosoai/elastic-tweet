@@ -1,5 +1,11 @@
-
-curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/tweet/_mapping' -d '
+#reinitialize
+# http://localhost:9200
+# local http://localhost:9200
+curl -XDELETE 'http://localhost:9200/twitter/'
+curl -XPUT 'http://localhost:9200/twitter/'
+#
+#set mapping
+curl -XPUT 'http://localhost:9200/twitter/tweet/_mapping' -d '
 {    
     "tweet" : {
     	"dynamic": "true",
@@ -7,16 +13,25 @@ curl -XPUT 'http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly
       	  "text" : { "type" : "string" },        
       	  "hashtags" : { "type" : "string" },        
         "location": {
-                "type" : "geo_point"
+                "type" : "geo_point",
+	            "geohash_prefix": true,
+	            "geohash_precision": 6				
         },
 		  "geoshape_location" : { "type" : "geo_shape" ,"tree":"quadtree"}        
         }
     }
 }'
   
-  
-curl -XPUT http://paas:db71af800adf05b16dab2e61d2e5d715@fili-us-east-1.searchly.com:80/twitter/_settings -d '{
+#set refresh interval
+curl -XPUT http://localhost:9200/twitter/_settings -d '{
     "index" : {
-        "refresh_interval" : "1s"
-    } }'  
+        "refresh_interval" : "10s"
+    } 
+}' 
+
+curl -XPUT http://localhost:9200/twitter/tweet/_settings -d '{
+    "index" : {
+        "refresh_interval" : "10s"
+    } 
+}'  
 

@@ -67,7 +67,7 @@ class Tweet
         },
         filter: {
           geo_distance: {
-            distance: "#{area.radius}km",
+            distance: "#{area.radius}mi",
             location: {
               lat: area.latitude,
               lon: area.longitude

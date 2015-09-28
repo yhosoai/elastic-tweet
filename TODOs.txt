@@ -9,10 +9,11 @@
 #5. End to End working (user type area info -> shows top 250) 
 	#5a. Search working (sorted by recent, limited by area)
 	#5b. Make sure accuracte geopoint is loaded to elasticsearch
-		#test case 1. search from lat lon on san jose with 100 km, will hit san francisco tweet
+		#test case 1. search from lat lon on san jose with 100 km, will hit san francisco tweet 
 		#test case 1b. it should not hit tweet from NYC
 		#test case 2. search from lat lon on san jose with 10 km, will not hit san francisco tweet
-
+		#test case 3. search with hashtag
+		
 	#5c. Use of geohash_cell and cache filter to ensure fast query
 	
 	#5d. Additionally, tweets can be filtered within the above area with a specific hangtag (i.e.: #amazing, #super, #obama, etc)

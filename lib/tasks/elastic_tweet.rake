@@ -17,25 +17,31 @@ namespace :elastic_tweet do
    repository = Tweet.repository
    
    #get all area locations
-   locations =Area.all.map{|a| [a.latitude,a.longitude]}.uniq.flatten
-   
-   # -123.044,36.846,-121.591,38.352,-74,40,-73,41
-   
-   
+   # locations =Area.all.map{|a| [a.longitude.round,a.latitude.round]}.uniq.flatten
+   # locations = locations.concat mainCities
+   # newyork=40.71427, longitude=-74.00597 NEW YORK CITY
+   #start tracking main cities for now
+   locations= -123.044,36.846,-121.591,38.352,-74,40,-73,41#,-74.00597,40.71427,-87.6847,41.8369
+   # locations = -122, 37, -74, 41, -124, 32, -80, 40, -73, 40
+   starttime = DateTime.now
    #san francisco,CA
    # locations =  -123.044,36.846,-121.591,38.352  
    cycle = 0
    TweetStream::Client.new.locations(locations) do |tweet|    
-      puts "#new tweets #{tweet.text}"
-      tweetwrap = Tweet.new
-      tweetwrap.mapFromStream(tweet)
-      repository.save(tweetwrap)
-      cycle++
-#refresh index every 100 tweets
-      if(cycle>100)
-        repository.refresh_index! force: true
-        cycle = 0
-      end
+    puts "#new tweets #{tweet.text}"
+    tweetwrap = Tweet.new
+    tweetwrap.mapFromStream(tweet)
+    repository.save(tweetwrap)
+    cycle++
+    #refresh index every 300 tweets
+    if(cycle>300)
+      repository.refresh_index! force: true
+      cycle = 0
+    end
+    if(DateTime.now > starttime+15.minutes)
+      #heroku will start new job with new locations so break 
+      break
+    end
    end
  end 
 
