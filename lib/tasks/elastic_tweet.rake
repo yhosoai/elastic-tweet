@@ -31,7 +31,7 @@ namespace :elastic_tweet do
       repository.refresh_index! force: true
       cycle = 0
     end
-    if(DateTime.now > starttime+15.minutes)
+    if(DateTime.now > starttime+60.minutes)
       #heroku will start new job with new locations so break 
       break
     end
@@ -40,6 +40,9 @@ namespace :elastic_tweet do
  
  task :streamNorCalTweets => :environment do
    stream(norcal)
+ end 
+ task :streamCaliforniaTweets => :environment do
+   stream(california)
  end 
  task :streamNYweets => :environment do
    stream(ny)
