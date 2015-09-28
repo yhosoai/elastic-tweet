@@ -1,0 +1,12 @@
+<br/>
+<%if(tweet)%>
+<div id="tweet_<%=tweet.id%>">
+	<%=tweet.text%>
+	<br/>
+	<%=tweet.created_at%>
+
+	<%if tweet.hashtags %>
+		<span class="hashtags"><%=tweet.hashtags.map{|x|"##{x}"}.join(",")%></span>
+	<%end%>
+</div>
+<%end%>

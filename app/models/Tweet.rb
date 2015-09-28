@@ -4,30 +4,23 @@ class Tweet
 
   # Define an `author` attribute, with multiple analyzers for this field
   attr_reader :attributes
-  def self.querystr
+  attr_reader :text
+  attr_reader :created_at
+
+  def id
+    @attributes["id"]
+  end
     
-    querystr = '{
-      "query": {
-        "filtered" : {
-            "query" : {
-                "match_all" : {}
-            },
-            "filter" : {
-                "geo_distance" : {
-                    "distance" : "2000km",
-                    "location" : {
-                        "lat" : -122,
-                        "lon" : 37
-                    }
-                }
-            }
-        }
-       },
-        "sort": [
-               { "created_at":   { "order": "desc" }}
-           ]
-    }'
-    return querystr
+  def text
+    @attributes["text"]
+  end
+  
+  def created_at
+    @attributes["created_at"]
+  end
+  
+  def hashtags
+    @attributes["hashtags"]
   end
   
   def mapFromStream(stream={})
@@ -62,65 +55,39 @@ class Tweet
   #https://dev.twitter.com/rest/reference/get/geo/reverse_geocode
   #https://www.elastic.co/guide/en/elasticsearch/guide/current/geo-shapes.html#geo-shapes
   #using elastic search geo-shape, filter by this.
-  def self.showTweetsInArea(area)
-    #TODO get it from TweetRepository instead. somehow it's not working
-    # client Elasticsearch::Client.new url: ENV['ELASTICSEARCH_URL'], log: true
 
-    repository = Elasticsearch::Persistence::Repository.new do
-      client Elasticsearch::Client.new url: 'http://localhost:9200', log: true
+  #debugging, as the response is different from straight curl
+  def self.showTweetsInArea(area, hashtag=nil)
+    sort = [{created_at: {order: "desc"}}]
 
-      # Set a custom index name
-      index :twitter
-
-      # Set a custom document type
-      type  :tweet
-
-      # Specify the class to initialize when deserializing documents
-      klass Tweet
-
-      # Configure the settings and mappings for the Elasticsearch index
-      settings number_of_shards: 1 do
-        mapping do
-          indexes :text,  analyzer: 'snowball'
-          indexes :location, type: 'geo_point', as: 'coordinates'
-          indexes :geoshape_location, type: 'geo_shape', as: 'coordinates'
-          indexes :hashtags, analyzer: 'english'
-        end
-      end
-
-      # Customize the serialization logic
-      def serialize(document)
-       super
-      end
-
-      def deserialize(document)
-          puts "# ***** CUSTOM DESERIALIZE LOGIC KICKING IN... *****"
-          super
-        end
-    end
-    
-    repository.search(query: {
-        filtered: {
-          query: {
-            match_all: {}
-          },
-          filter:
-            {
-              geo_distance: 
-              {distance: "200km",
-               location:{
-                lat: area.latitude, lon: area.longitude
-                }
-              }
+    query = {
+      filtered: {
+        query: {
+          match_all: {}
+        },
+        filter: {
+          geo_distance: {
+            distance: "#{area.radius}km",
+            location: {
+              lat: area.latitude,
+              lon: area.longitude
             }
           }
-      })
-      
-     
+        }
+      }
+    }
+    if(hashtag)
+      query[:filtered][:query] = {match: { hashtag: hashtag }}
+    end
+    repository = Tweet.repository
+    
+    tweets = repository.search(query: query, sort: sort)
+    return tweets
   end
   
+ 
   
-  def self.createRepository
+  def self.repository
     repository = Elasticsearch::Persistence::Repository.new do
       client Elasticsearch::Client.new url: ENV['ELASTICSEARCH_URL'], log: true
 
@@ -137,7 +104,7 @@ class Tweet
       settings number_of_shards: 1 do
         mapping do
           indexes :text,  analyzer: 'snowball'
-          indexes :location, type: 'geo_point', as: 'coordinates'
+          indexes :location, type: 'geo_point'
           indexes :geoshape_location, type: 'geo_shape', as: 'coordinates'
           indexes :hashtags, analyzer: 'english'
         end
@@ -152,7 +119,44 @@ class Tweet
         super
       end
     end
+    
+    
     return repository
+  end
+  
+  
+  ##TO BE DELETED
+  def self.debugShowTweetsInArea(area)
+
+    repository = Tweet.repository
+       #
+    #using rawso that we can switch back and forth with other way of calling API
+      querystr = '{
+              "query": {
+                "filtered" : {
+                    "query" : {
+                        "match_all" : {}
+                    },
+                    "filter" : {
+                        "geo_distance" : {
+                            "distance" : "'+"#{area.radius}"+'km",
+                            "location" : {
+                                "lat" : '+"#{area.latitude}"+',
+                                "lon" : '+"#{area.longitude}"+'
+                            }
+                        }
+                    }
+                }
+               },
+                "sort": [
+                       { "created_at":   { "order": "desc" }}
+                   ]
+          }'
+      queryJson = JSON.parse(querystr)
+      puts "this is the query we are sending #{querystr}"
+      tweets = repository.search(queryJson)
+      return tweets
+     
   end
   
 end

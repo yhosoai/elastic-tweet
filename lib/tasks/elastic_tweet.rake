@@ -14,17 +14,28 @@ namespace :elastic_tweet do
    #cast to Tweet object that has only fields that we care about
 
    
-   repository = Tweet.createRepository
+   repository = Tweet.repository
    
-   locations = -123.044,36.846,-121.591,38.352,-74,40,-73,41
+   #get all area locations
+   locations =Area.all.map{|a| [a.latitude,a.longitude]}.uniq.flatten
+   
+   # -123.044,36.846,-121.591,38.352,-74,40,-73,41
+   
+   
    #san francisco,CA
-   # locations =  -123.044,36.846,-121.591,38.352
-  
+   # locations =  -123.044,36.846,-121.591,38.352  
+   cycle = 0
    TweetStream::Client.new.locations(locations) do |tweet|    
       puts "#new tweets #{tweet.text}"
       tweetwrap = Tweet.new
       tweetwrap.mapFromStream(tweet)
       repository.save(tweetwrap)
+      cycle++
+#refresh index every 100 tweets
+      if(cycle>100)
+        repository.refresh_index! force: true
+        cycle = 0
+      end
    end
  end 
 

@@ -14,12 +14,5 @@
       }
     }
   }
+}
   
-  "tweet" : {
-  	"dynamic": "true",
-      "properties" : {        
-    	  "text" : { "type" : "string" },        
-    	  "hashtags" : { "type" : "string" },        
-	  "coordinates" : { "type" : "geo_shape" ,"tree":"quadtree"}        
-      }
-  }

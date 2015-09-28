@@ -14,6 +14,43 @@
   <strong>Radius:</strong>
   <%= @area.radius %>
 </p>
-
+<p>
+<label for="search-basic">Search Input:</label>
+<input type="search" name="search" id="search_hashtags" value="" />
+<input type="button" value="filter hashtag" onclick="filterHashtags()">. 
+</p>
 <%= link_to 'Edit', edit_area_path(@area) %> |
 <%= link_to 'Back', areas_path %>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div id="tweets">
+<%=render 'tweets/tweets', tweets: @tweets%>
+</div>
+
+
+<script>
+$(document).ready(function () {
+    // will call refreshPartial every 10 seconds
+    setInterval(refreshPartial, 10000)
+});
+
+// calls action refreshing the partial
+function refreshPartial() {
+  $.ajax({
+    url: "/area/refresh_tweets/<%=@area.id%>.js"
+ })
+}
+
+function filterHashtags() {
+	hashtag = $("#search_hashtags").val();
+	if(hashtag){	 
+	  $.ajax({
+   	   url: "/area/refresh_tweets/<%=@area.id%>.js?hashtag="+hashtag
+	  })
+  	}
+}
+</script>

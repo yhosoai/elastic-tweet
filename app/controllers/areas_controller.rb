@@ -2,6 +2,7 @@
 
 class AreasController < ApplicationController
   before_action :set_area, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery :except => :refresh_tweets
 
   # GET /areas
   # GET /areas.json
@@ -16,8 +17,19 @@ class AreasController < ApplicationController
     # repository.search(query: { match: { text: 'test' } }).first
 
     @tweets = Tweet.showTweetsInArea(@area)
+    
   end
+  def refresh_tweets
+    @area = Area.find(params[:id])
+    hashtag = params[:hashtag]
+    @tweets = Tweet.showTweetsInArea(@area,hashtag)
 
+    respond_to do |format|
+      format.js { render :partial => '/tweets/refresh_tweets', :status => 200 }
+    end
+  end
+  
+  
   # GET /areas/new
   def new
     @area = Area.new

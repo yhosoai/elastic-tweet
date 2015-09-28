@@ -1,0 +1,3 @@
+# of Tweets (250 max): <%=tweets.size%>
+
+<%= render :partial => '/tweets/tweet', :collection => tweets, cache:Proc.new{|item| [item, "tweet_#{id}"]} %>
