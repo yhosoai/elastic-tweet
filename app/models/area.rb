@@ -4,6 +4,10 @@ require 'elasticsearch/persistence'
 
 class Area < ActiveRecord::Base
   reverse_geocoded_by :latitude, :longitude
+  geocoded_by :address 
+  after_validation :reverse_geocode   
+  # field :coordinates, :type => Array
+  
   # after_validation :reverse_geocode  # auto-fetch address
   # field :address
   # after_create: rake_job
