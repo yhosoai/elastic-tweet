@@ -92,7 +92,7 @@ class Tweet
   
   def self.repository
     repository = Elasticsearch::Persistence::Repository.new do
-      client Elasticsearch::Client.new url: ENV['ELASTICSEARCH_URL'], log: true
+      client Elasticsearch::Client.new url: ENV['ELASTICSEARCH_URL'], log: false
 
       # Set a custom index name
       index :twitter

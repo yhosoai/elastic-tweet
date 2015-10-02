@@ -21,7 +21,7 @@ namespace :elastic_tweet do
    # locations =  -123.044,36.846,-121.591,38.352  
    cycle = 0
    TweetStream::Client.new.locations(bounding_box) do |tweet|    
-    puts "#new tweets #{tweet.text}"
+    
     tweetwrap = Tweet.new
     tweetwrap.mapFromStream(tweet)
     repository.save(tweetwrap)

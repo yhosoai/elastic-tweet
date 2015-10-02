@@ -19,7 +19,6 @@ class Area < ActiveRecord::Base
 
   # find existing value  
   def self.find_lat_lon(area)
-    puts area.inspect
     area = Area.where(:latitude=>area.latitude, :longitude=>area.longitude,:radius=>area.radius)
       if(area!=nil)
         return area.first
